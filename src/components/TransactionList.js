@@ -1,13 +1,26 @@
-import React  from "react";
+import React, { useContext }  from "react";
+import { GlobalContext } from "../context/GlobalState";
+
+const Transaction = ({transaction}) => {
+    const sign = transaction.amount < 0 ? '-':'+';
+
+    const { deleteTransaction } = useContext(GlobalContext);
+    return (
+        <li className={transaction.amount < 0 ? 'minus' : 'plus'}>
+            {transaction.text} <span> {sign} Rs {Math.abs(transaction.amount)}</span>
+            <button onClick={() => deleteTransaction(transaction.id)} className="delete-btn">x</button>
+        </li>
+    )
+}
 
 export const TransactionList = () => {
+    const { transactions } = useContext(GlobalContext);
+
     return (
         <div>
             <h3>History</h3>
             <ul id="list" className="list">
-                <li className="minus">
-                    Cash <span> - Rs400</span><button className="delete-btn">x</button>
-                </li>
+                {transactions.map((transaction => <Transaction transaction={transaction}></Transaction>))}
             </ul>
         </div>
     );
